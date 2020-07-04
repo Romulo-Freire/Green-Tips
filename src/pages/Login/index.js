@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, StatusBar, Image, TextInput, TouchableOpacity } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { View, Text, StatusBar, Image, TextInput, TouchableOpacity, Alert, AsyncStorage } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Icon from 'react-native-vector-icons/AntDesign';
 
@@ -7,10 +7,12 @@ import styles from './styles';
 
 import Logo from '../../../assets/logo.png'
 
+import firebase from '../../services/firebase';
+
 const Login = ({ navigation }) => {
 
-  
-
+  const [email, setEmail] = useState('');
+  const [password, setPassword] =  useState('');
   const [save, setSave] = useState(false);
   const inputUser = useRef(null);
 
@@ -18,12 +20,27 @@ const Login = ({ navigation }) => {
     inputUser.current.focus();
   }
 
-  function handleLogin(){
+  async function setSavelog(){
+    if(save){
+      await AsyncStorage.setItem('save', JSON.stringify(save));
+      const user = { email, password}
+      await AsyncStorage.setItem('user', JSON.stringify(user));
+    }
     navigation.navigate('Menu');
+  } 
+
+  function handleLogin(){
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then( result => {
+        setSavelog()
+      })
+      .catch(error => {
+        Alert.alert('Email ou senha inválidos, tente novamente!');
+      });
   }
 
   function handleRegister(){
-    navigation.navigate('Register');
+    navigation.navigate('Decides');
   }
 
   return (
@@ -44,10 +61,12 @@ const Login = ({ navigation }) => {
                   size={22}
                    />
                 <TextInput 
-                  placeholder='Username'
+                  placeholder='Email'
                   placeholderTextColor='#d2691e' 
                   style={styles.input} 
                   returnKeyType={'next'}
+                  value={email}
+                  onChangeText={setEmail}
                   onSubmitEditing={ () => { proxInput()}} />
                 </View>
                 
@@ -61,6 +80,8 @@ const Login = ({ navigation }) => {
                     placeholder='Password'
                     placeholderTextColor='#d2691e' 
                     style={styles.input}
+                    value={password}
+                    onChangeText={setPassword}
                     ref={inputUser}  />
                   </View>
                   <View style={styles.content_check}>

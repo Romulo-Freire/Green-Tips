@@ -12,16 +12,17 @@ const Locals = () => {
   const [location, setLocation] = useState(null);
 
   const navigator = useNavigation();
-  
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', () =>  exitApp());
 
-    return BackHandler.removeEventListener('hardwareBackPress', () => exitApp());
-  }, []);
-
-  function exitApp(){
-    Alert.alert('foi');
+  function teste(){
+    navigator.goBack(null);
+    return true
   }
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => teste() );
+
+    return BackHandler.removeEventListener('hardwareBackPress', () => teste());
+  }, []);
 
   useEffect(() => {
     async function initPosition(){

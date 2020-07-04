@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "greetips-react",
-    "slug": "greetips-react",
+    "name": "Green Tips",
+    "slug": "GreeTips",
     "platforms": [
       "ios",
       "android",

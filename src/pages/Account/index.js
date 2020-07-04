@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, KeyboardAvoidingView} from 'react-native';
+import React, { useState, useRef, useEffect} from 'react';
+import { View, Text, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, BackHandler, Alert, AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
+import firebase from '../../services/firebase';
 
 import ImgUser from '../../../assets/logo.png';
 
@@ -9,15 +10,44 @@ import styles from './styles';
 const Account = () => {
 
   const [userImg, setUserImg] = useState(null);
-  const [useName, setUserName] = useState('Romulo Vieira');
-  const [email, setEmail] = useState('romulo@gmail.com');
-  const [cpf, setCpf] = useState('778887544574');
-  const [numero, setNumero] = useState('95867423');
+  const [useName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [numero, setNumero] = useState('');
 
   const [isEditable, setIsEditable] = useState(false);
 
   const userNameRef = useRef();
 
+  useEffect(() => {
+    firebase.database().ref('users/'+ firebase.auth().currentUser.uid).once('value')
+      .then( snapshot => {
+        setUserName(snapshot.val().name);
+        setCpf(snapshot.val().cpf);
+        setNumero(snapshot.val().contato);
+      });
+
+    setEmail(firebase.auth().currentUser.email);
+
+  }, []);
+
+  function logOff(){
+    firebase.auth().signOut()
+      .then( async result => {
+        await AsyncStorage.removeItem('save');
+        await AsyncStorage.removeItem('user');
+        BackHandler.exitApp()
+      })
+      
+  }
+
+  function decide(){
+    Alert.alert('Sair', 'Tem certeza ?', [{
+      text: 'Sair', onPress: () => logOff()
+    },{
+      text: 'cancelar'
+    }])
+  }
   return (
       <KeyboardAvoidingView 
         behavior={'padding'}
@@ -70,6 +100,12 @@ const Account = () => {
                 style={styles.input_data}
               />
             </View>
+            <TouchableOpacity 
+              style={styles.button_sair}
+              onPress={ () => decide()}
+              >
+              <Text style={styles.text_sair}>Sair</Text>
+            </TouchableOpacity>
 
             <View style={styles.content_button}>
               <TouchableOpacity

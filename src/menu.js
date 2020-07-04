@@ -16,7 +16,7 @@ export default function Menu() {
     >
       <Tab.Navigator
         initialRouteName={'Locais'}
-        backBehavior={'none'}
+        backBehavior={'history'}
         tabBarOptions={{
           activeTintColor: '#8ef19a',
           allowFontScaling: true,

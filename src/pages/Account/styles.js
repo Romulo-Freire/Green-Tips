@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     },
 
     user_name:{
-        width: '55%', 
+        width: '35%', 
         marginLeft: 5,
         marginRight: 5,
         fontWeight: 'bold',
@@ -103,6 +103,21 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 18,
     },
+
+    button_sair: { 
+        backgroundColor: '#fff', 
+        width: 60, 
+        height: 50, 
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+        borderRadius: 12, 
+    },
+
+    text_sair: {
+        color: '#8ef19a',
+        fontWeight: 'bold',
+    }
 });
 
 export default styles;

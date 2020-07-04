@@ -45,6 +45,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'auto',
         marginTop: 30,
+        shadowColor: '#333',
+        shadowOffset: {
+            width: 10,
+            height: 20,
+        },
+        elevation: 5,
     },
 
     text_button:{
